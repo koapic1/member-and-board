@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jjang051.mybatis.member">
+	<select id="getAllMemberList" resultType="MemberDto" parameterType="HashMap">
+		SELECT * FROM 
+			(SELECT ROWNUM AS NUM,B.* FROM 
+				(SELECT * FROM MEMBER
+					<if test="searchWord!=null and searchWord!=''" >
+						WHERE ${searchSelect}  LIKE  '%'||#{searchWord}||'%'
+					</if> 
+					ORDER BY NO DESC
+				) B
+			) 
+		WHERE NUM BETWEEN #{start} AND #{end}
+	</select>
+	<!-- 
+		원래는 resultType에 class 전체 경로를 써야 하는데 com.jjang051.model.MemberDto
+		번거러운 경우 TypeAlias를 통해 경로를 축약해서 쓸 수 있다.
+		mybatis를 사용하는 이유는 sql 개발 분리... 
+	-->
+	<select id="getMemberSelectOne" resultType="MemberDto" parameterType="String"  >
+		SELECT * FROM MEMBER WHERE ID = #{id}
+	</select>
+	<select id="getLoggedMember" resultType="MemberDto" parameterType="MemberDto">
+		SELECT * FROM MEMBER WHERE ID = #{id} AND PASSWORD = #{password}
+	</select>
+	
+	<!-- delete, update, insert는 따로 resultType이 없다 정수를 리턴해준다 -->
+	<delete id="deleteMember" parameterType="MemberDto">
+		DELETE FROM MEMBER WHERE ID = #{id} AND PASSWORD = #{password}
+	</delete>
+	
+	<insert id="insertMember" parameterType="MemberDto">
+		INSERT INTO MEMBER VALUES (SEQ_MEMBER.NEXTVAL,
+								   #{id},
+								   #{password},
+								   #{name},
+								   #{email},
+								   #{phone},
+								   #{zipCode},
+								   #{address},
+								   SYSDATE,
+								   #{img},
+								   #{realImg},
+								   #{thumb}
+		)
+	</insert>
+	<update id="updateMember" parameterType="MemberDto">
+		UPDATE MEMBER SET NAME     =  #{name}, 
+		                  EMAIL    =  #{email}, 
+		                  PHONE    =  #{phone}, 
+		                  ZIPCODE  =  #{zipCode},
+		                  ADDRESS  =  #{address}, 
+		                  IMG      =  #{img},
+						  REALIMG  =  #{realImg},
+						  THUMB	   =  #{thumb}
+		                  WHERE ID =  #{id} AND PASSWORD = #{password}
+	</update>
+	
+	<select id="idCheck" parameterType="String" resultType="Integer">
+		SELECT COUNT(*) FROM MEMBER WHERE ID = #{id}
+	</select>
+	<select id="getMemberTotal" resultType="Integer" parameterType="HashMap">
+		SELECT COUNT(*) AS TOTAL FROM MEMBER
+		<if test="searchWord!=null and searchWord!=''" >
+			WHERE ${searchSelect}  LIKE  '%'||#{searchWord}||'%'
+		</if> 
+	</select>
+</mapper>

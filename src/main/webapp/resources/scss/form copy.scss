@@ -1,0 +1,116 @@
+.form,
+.tableBox {
+  max-width: 1200px;
+  margin: auto;
+  .inputBox {
+    input[type="text"],
+    input[type="password"],
+    input[type="number"],
+    select {
+      width: 100%;
+      height: 40px;
+      padding: 0 10px;
+      box-sizing: border-box;
+      border: 1px solid #d9d9d9;
+      &.short {
+        width: 200px;
+      }
+    }
+    &.center {
+      display: flex;
+      justify-content: center;
+    }
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border-top: 1px solid #999;
+    .required {
+      color: #ff0000;
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 10px;
+    }
+    td,
+    th {
+      padding: 10px;
+      border: none;
+      border-bottom: 1px solid #999;
+    }
+    th {
+      background-color: #d9d9d9;
+      font-weight: 700;
+      text-align: center;
+    }
+    input[type="text"],
+    input[type="password"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      height: 40px;
+      padding: 0 10px;
+      box-sizing: border-box;
+      border: 1px solid #d9d9d9;
+      &.short {
+        width: 200px;
+      }
+      &.readonly {
+        background-color: #111 !important;
+        color: #fff !important;
+      }
+    }
+    textarea {
+      min-height: 300px;
+      resize: none;
+      padding: 10px;
+    }
+    textarea:not(#summernote) button,
+    textarea:not(#summernote) .sticker {
+      height: 40px;
+      padding: 0 10px;
+      box-sizing: border-box;
+      background-color: #111;
+      border: 1px solid #d9d9d9;
+      color: #fff;
+      border-radius: 5px;
+      min-width: 80px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 10px;
+      font-size: 12px;
+    }
+
+    .addrBox {
+      margin: 5px 0;
+      display: flex;
+      align-items: center;
+      input {
+        width: 70%;
+      }
+    }
+  }
+  .btns {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    .btn {
+      display: flex;
+      width: 120px;
+      height: 60px;
+      border-radius: 5px;
+      margin: 0 5px;
+      color: #fff;
+      justify-content: center;
+      align-items: center;
+      font-size: 16px;
+      &.btnConfirm {
+        background-color: rgb(3, 125, 206);
+      }
+      &.btnCancel {
+        background-color: rgb(114, 114, 114);
+      }
+    }
+  }
+}

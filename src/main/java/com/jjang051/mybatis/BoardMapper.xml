@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jjang051.mybatis.board">
+	<insert id="insertBoard" parameterType="ReplyBoardDto">
+		INSERT INTO REPLY_BOARD VALUES (SEQ_REPLYBOARD.NEXTVAL,
+										#{subject},
+										#{name},
+										#{email},
+										#{password},
+										sysdate,
+										#{reGroup},
+										#{reLevel},
+										#{reStep},
+										0,
+										#{contents},
+										#{id}
+										)
+	</insert>
+	<!-- 
+		<insert id="insertReplyBoard" parameterType="ReplyBoardDto">
+		INSERT INTO REPLY_BOARD VALUES (SEQ_REPLYBOARD.NEXTVAL,
+										#{subject},
+										#{name},
+										#{email},
+										#{password},
+										sysdate,
+										#{reGroup},
+										#{reLevel} + 1,
+										#{reStep} + 1,
+										0,
+										#{contents},
+										#{id}
+										)
+	</insert>
+	 -->
+	<select id="getAllList" resultType="ReplyBoardDto" parameterType="HashMap">
+		<!-- 
+			<![CDATA[
+				SELECT * FROM 
+					(SELECT ROWNUM AS NUM,B.* FROM 
+						(SELECT * FROM REPLY_BOARD ORDER BY REGROUP DESC, RELEVEL ASC) B
+					) 
+				WHERE NUM >= #{start} AND NUM <= #{end}
+			]]>
+		 -->	
+		SELECT * FROM 
+			(SELECT ROWNUM AS NUM,B.* FROM 
+				(SELECT * FROM REPLY_BOARD
+					<if test="searchWord!=null and searchWord!=''" >
+						WHERE ${searchSelect}  LIKE  '%' || #{searchWord} || '%'
+					</if> 
+					ORDER BY REGROUP DESC, RELEVEL ASC
+				) B
+			) 
+		WHERE NUM <![CDATA[>=]]> #{start} AND NUM <![CDATA[<=]]> #{end}
+		<!-- WHERE NUM BETWEEN #{start} AND #{end} -->
+	</select>
+	<!--  마이바티스에서 컬럼명을 변수로 받아야 할때는 $을 쓴다. #{abc}   'abc'   ${abc}  abc-->
+	<select id="getSearchAllList" resultType="ReplyBoardDto" parameterType="HashMap">
+		SELECT * FROM REPLY_BOARD 
+		WHERE ${searchSelect}  LIKE  '%' || #{searchWord} || '%'  ORDER BY REGROUP DESC, RELEVEL ASC 
+	</select>
+	
+	<select id="getSelectOne" parameterType="Integer" resultType="ReplYBoardDto">
+		SELECT * FROM REPLY_BOARD WHERE NO = #{no}
+	</select>
+	
+	<update id="updateHit" parameterType="Integer">
+		UPDATE REPLY_BOARD SET HIT = HIT + 1 WHERE NO = #{no}
+	</update>
+	
+	<select id="getNextSelect"  parameterType="Integer" resultType="ReplYBoardDto">
+		SELECT * FROM 
+			(SELECT ROWNUM AS NUM,B.* FROM 
+				(SELECT * FROM REPLY_BOARD ORDER BY REGROUP DESC, RELEVEL ASC) B ) 
+		WHERE NUM = #{num} + 1
+	</select>
+	
+	<select id="getPrevSelect"  parameterType="Integer" resultType="ReplYBoardDto">
+		SELECT * FROM 
+			(SELECT ROWNUM AS NUM,B.* FROM 
+				(SELECT * FROM REPLY_BOARD ORDER BY REGROUP DESC, RELEVEL ASC) B ) 
+		WHERE NUM = #{num} - 1
+	</select>
+	
+	<delete id="deleteBoard" parameterType="ReplyBoardDto">
+		DELETE FROM REPLY_BOARD WHERE NO = #{no} AND PASSWORD = #{password}
+	</delete>
+	
+	<select id="getMaxReGroup" resultType="Integer">
+		SELECT NVL(MAX(REGROUP),1) AS REGROUPMAX FROM REPLY_BOARD
+	</select>
+
+	<select id="getTotal" resultType="Integer" parameterType="HashMap">
+		SELECT COUNT(*) AS TOTAL FROM REPLY_BOARD
+		<if test="searchWord!=null and searchWord!=''" >
+			WHERE ${searchSelect}  LIKE  '%' || #{searchWord} || '%'
+		</if> 
+	</select>
+	
+	<update id="updateReLevel" parameterType="ReplyBoardDto">
+		UPDATE REPLY_BOARD SET RELEVEL = RELEVEL + 1 
+		WHERE REGROUP = #{reGroup} AND 
+		RELEVEL  <![CDATA[ > ]]> #{reLevel}
+	</update>
+	<update id="updateBoard" parameterType="ReplyBoardDto">
+		UPDATE REPLY_BOARD SET SUBJECT = #{subject}, CONTENTS = #{contents} 
+		WHERE NO = #{no} AND PASSWORD = #{password}   
+		
+	</update>
+	
+	<!-- <select id="getSearchTotal" resultType="Integer">
+		SELECT COUNT(*) AS TOTAL FROM REPLY_BOARD
+	</select> -->
+</mapper>

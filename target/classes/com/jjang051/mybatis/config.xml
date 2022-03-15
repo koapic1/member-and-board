@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- <properties resource="com/jjang051/mybatis/db.properties" /> -->
+	<typeAliases>
+		<!-- 별명 달기  Mapper 파일에 있는 resutlType과 연결된다.  -->
+		<typeAlias type="com.jjang051.model.MemberDto" alias="MemberDto" />
+		<typeAlias type="com.jjang051.model.ReplyBoardDto" alias="ReplyBoardDto" />
+	</typeAliases>
+	<!-- 
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="${driver}" />
+				<property name="url" value="${url}" />
+				<property name="username" value="${username}" />
+				<property name="password" value="${password}" />
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+		<mapper resource="com/jjang051/mybatis/MemberMapper.xml" />
+		<mapper resource="com/jjang051/mybatis/BoardMapper.xml" />
+	</mappers>
+	 -->
+</configuration>
+
+
+
+
+
+
